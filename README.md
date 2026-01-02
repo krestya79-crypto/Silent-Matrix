@@ -1,62 +1,154 @@
-### SilentMatrix ##
+#include <iostream>
+#include <limits>
+#include <vector>
 
+using namespace std;
 
-##                                       ##
-##   H I L L  C I P H E R  S Y S T E M   ##
-##          [ Matrix 2x2 Mode ]          ##
-##                                       ##
+const int KEY[2][2] = { {3, 5}, {1, 2} };
+const int INV_KEY[2][2] = { {2, 22}, {26, 3} };
+const int ALPHABET_SIZE = 27;
 
-**Overview**
-SilentMatrix is a C++ cryptographic tool implementing the Hill Cipher algorithm using 2x2 matrix transformations. It is designed for users interested in linear algebra-based encryption and cryptographic analysis. The system extends the standard English alphabet to include spaces, providing a seamless encryption experience for full sentences.
+// هيكل بيانات لحفظ السجل
+struct History {
+    int data[1000];
+    int size;
+};
 
-**Key Features**
-*Mathematical Core*: Implements encryption and decryption using modular arithmetic and matrix inversion.
+vector<History> historyLog;
 
-*Extended Alphabet*: Supports 27 characters (A-Z and Space), mapping the space character to index 26.
+int charToNum(char c);
+char numToChar(int n);
+void encrypt();
+void decryptManual();
+void decryptFromHistory();
 
-*Analytical History*: Includes a session-based logging system that stores encrypted records with custom tags for later retrieval and analysis.
+int main() {
+    int choice;
+    while (true) {
+        cout << "\n--- Hill Cipher System ---" << endl;
+        cout << "1. Encrypt & Save to History" << endl;
+        cout << "2. Decrypt (Manual Entry)" << endl;
+        cout << "3. Decrypt from History (Saved Records)" << endl;
+        cout << "4. Exit" << endl;
+        cout << "Choice: ";
+        if (!(cin >> choice)) break;
 
-Manual and Automated Decryption: Allows users to manually input ciphered numbers or decrypt stored records directly from the internal database.
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-### Technical Specifications
-Cipher Type: Symmetric Key (Hill Cipher)
+        if (choice == 1) encrypt();
+        else if (choice == 2) decryptManual();
+        else if (choice == 3) decryptFromHistory();
+        else if (choice == 4) break;
+    }
+    return 0;
+}
 
-Alphabet Size: 27
+void encrypt() {
+    char t[1000], f[1000];
+    int fi = 0, L = 0;
+    History newRecord;
+    newRecord.size = 0;
 
-Encryption Key (K)
-Plaintext
+    cout << "Enter sentence: ";
+    cin.getline(t, 1000);
 
-| 3  5 |
-| 1  2 |
-Decryption Key (K^-1)
-Plaintext
+    while (t[L] != '\0') {
+        if (charToNum(t[L]) != -1) {
+            if (t[L] >= 'a' && t[L] <= 'z') f[fi] = (char)(t[L] - 'a' + 'A');
+            else f[fi] = t[L];
+            fi++;
+        }
+        L++;
+    }
+    f[fi] = '\0';
+    L = fi;
 
-| 2  22 |
-| 26  3 |
+    if (L % 2 != 0) { f[L] = ' '; L++; f[L] = '\0'; }
 
-### How It Works
-The system treats text as vectors and multiplies them by the key matrix. For decryption, it utilizes the modular multiplicative inverse of the determinant to ensure the original message is recovered accurately.
+    int b[2], r[2];
+    cout << "Encrypted Numbers: ";
+    for (int i = 0; i < L; i += 2) {
+        for (int j = 0; j < 2; j++) b[j] = charToNum(f[i + j]);
+        for (int r_idx = 0; r_idx < 2; r_idx++) {
+            r[r_idx] = 0;
+            for (int c = 0; c < 2; c++) r[r_idx] += KEY[r_idx][c] * b[c];
+            r[r_idx] %= ALPHABET_SIZE;
 
-Encryption: Converts text to numeric vectors, performs matrix multiplication modulo 27, and outputs a sequence of integers.
+            newRecord.data[newRecord.size++] = r[r_idx];
+            cout << r[r_idx] << " ";
+        }
+    }
+    historyLog.push_back(newRecord);
+    cout << "\n[Saved to History as Record #" << historyLog.size() - 1 << "]" << endl;
+}
 
-Tagging: Users can assign a unique label to each encryption session.
+void decryptManual() {
+    int e[1000], count = 0;
+    cout << "Enter encrypted numbers (End with Ctrl+Z/D): \n";
+    while (cin >> e[count] && count < 1000) count++;
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-Storage: The result is pushed to a vector-based history log.
+    cout << "Decrypted Text: ";
+    for (int i = 0; i < count; i += 2) {
+        int cb[2];
+        for (int j = 0; j < 2; j++) cb[j] = e[i + j];
+        for (int r_idx = 0; r_idx < 2; r_idx++) {
+            int val = 0;
+            for (int c = 0; c < 2; c++) val += INV_KEY[r_idx][c] * cb[c];
+            val %= ALPHABET_SIZE;
+            if (val < 0) val += ALPHABET_SIZE;
+            cout << numToChar(val);
+        }
+    }
+    cout << endl;
+}
 
-Decryption: Processes either user-provided integers or historical records to return the original plaintext.
+void decryptFromHistory() {
+    if (historyLog.empty()) {
+        cout << "History is empty!" << endl;
+        return;
+    }
 
-Installation and Usage
-Requirements: A C++ compiler (GCC, Clang, or MSVC).
+    cout << "Available Records:" << endl;
+    for (size_t i = 0; i < historyLog.size(); i++) {
+        cout << "Record #" << i << ": ";
+        for (int j = 0; j < historyLog[i].size; j++) cout << historyLog[i].data[j] << " ";
+        cout << endl;
+    }
 
-### Compilation:
+    int recIdx;
+    cout << "Enter Record Number to decrypt: ";
+    cin >> recIdx;
 
-Bash
+    if (recIdx >= 0 && recIdx < historyLog.size()) {
+        cout << "Decrypted Text: ";
+        for (int i = 0; i < historyLog[recIdx].size; i += 2) {
+            int cb[2];
+            for (int j = 0; j < 2; j++) cb[j] = historyLog[recIdx].data[i + j];
+            for (int r_idx = 0; r_idx < 2; r_idx++) {
+                int val = 0;
+                for (int c = 0; c < 2; c++) val += INV_KEY[r_idx][c] * cb[c];
+                val %= ALPHABET_SIZE;
+                if (val < 0) val += ALPHABET_SIZE;
+                cout << numToChar(val);
+            }
+        }
+        cout << endl;
+    }
+    else {
+        cout << "Invalid record number!" << endl;
+    }
+}
 
-g++ -o SilentMatrix main.cpp
-Execution:
+int charToNum(char c) {
+    if (c >= 'A' && c <= 'Z') return c - 'A';
+    if (c >= 'a' && c <= 'z') return c - 'a';
+    if (c == ' ') return 26;
+    return -1;
+}
 
-Bash
-
-./SilentMatrix
-Project Structure
-main.cpp: Contains the core logic, including matrix operations, history management, and the command-line interface.
+char numToChar(int n) {
+    if (n == 26) return ' ';
+    return (char)(n + 'A');
+}
