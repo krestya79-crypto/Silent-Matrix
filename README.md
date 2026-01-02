@@ -1,5 +1,4 @@
-SilentMatrix
-Plaintext
+### SilentMatrIX
 
 ###########################################
 ##                                       ##
@@ -7,19 +6,19 @@ Plaintext
 ##          [ Matrix 2x2 Mode ]          ##
 ##                                       ##
 ###########################################
-Overview
+**Overview**
 SilentMatrix is a C++ cryptographic tool implementing the Hill Cipher algorithm using 2x2 matrix transformations. It is designed for users interested in linear algebra-based encryption and cryptographic analysis. The system extends the standard English alphabet to include spaces, providing a seamless encryption experience for full sentences.
 
-Key Features
-Mathematical Core: Implements encryption and decryption using modular arithmetic and matrix inversion.
+**Key Features**
+*Mathematical Core*: Implements encryption and decryption using modular arithmetic and matrix inversion.
 
-Extended Alphabet: Supports 27 characters (A-Z and Space), mapping the space character to index 26.
+*Extended Alphabet*: Supports 27 characters (A-Z and Space), mapping the space character to index 26.
 
-Analytical History: Includes a session-based logging system that stores encrypted records with custom tags for later retrieval and analysis.
+*Analytical History*: Includes a session-based logging system that stores encrypted records with custom tags for later retrieval and analysis.
 
 Manual and Automated Decryption: Allows users to manually input ciphered numbers or decrypt stored records directly from the internal database.
 
-Technical Specifications
+### Technical Specifications
 Cipher Type: Symmetric Key (Hill Cipher)
 
 Alphabet Size: 27
@@ -34,7 +33,8 @@ Plaintext
 
 | 2  22 |
 | 26  3 |
-How It Works
+
+### How It Works
 The system treats text as vectors and multiplies them by the key matrix. For decryption, it utilizes the modular multiplicative inverse of the determinant to ensure the original message is recovered accurately.
 
 Encryption: Converts text to numeric vectors, performs matrix multiplication modulo 27, and outputs a sequence of integers.
@@ -48,7 +48,7 @@ Decryption: Processes either user-provided integers or historical records to ret
 Installation and Usage
 Requirements: A C++ compiler (GCC, Clang, or MSVC).
 
-Compilation:
+### Compilation:
 
 Bash
 
