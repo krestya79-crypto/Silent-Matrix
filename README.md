@@ -1,28 +1,39 @@
-**Overview**
-# SilentMatrix is a C++ cryptographic tool implementing the Hill Cipher algorithm using 2x2 matrix transformations. It is designed for users interested in linear algebra-based encryption and cryptographic analysis. The system extends the standard English alphabet to include spaces, providing a seamless encryption experience for full sentences.
+SilentMatrix
+Plaintext
 
-**Key Features**
+###########################################
+##                                       ##
+##   H I L L  C I P H E R  S Y S T E M   ##
+##          [ Matrix 2x2 Mode ]          ##
+##                                       ##
+###########################################
+Overview
+SilentMatrix is a C++ cryptographic tool implementing the Hill Cipher algorithm using 2x2 matrix transformations. It is designed for users interested in linear algebra-based encryption and cryptographic analysis. The system extends the standard English alphabet to include spaces, providing a seamless encryption experience for full sentences.
+
+Key Features
 Mathematical Core: Implements encryption and decryption using modular arithmetic and matrix inversion.
 
 Extended Alphabet: Supports 27 characters (A-Z and Space), mapping the space character to index 26.
 
 Analytical History: Includes a session-based logging system that stores encrypted records with custom tags for later retrieval and analysis.
 
-Manual & Automated Decryption: Allows users to manually input ciphered numbers or decrypt stored records directly from the internal database.
+Manual and Automated Decryption: Allows users to manually input ciphered numbers or decrypt stored records directly from the internal database.
 
 Technical Specifications
-Cipher Type: Symmetric Key (Hill Cipher).
+Cipher Type: Symmetric Key (Hill Cipher)
 
-Matrix Size: 2x2.
+Alphabet Size: 27
 
-Key Matrix:
+Encryption Key (K)
+Plaintext
 
-Encryption: {{3, 5}, {1, 2}}
+| 3  5 |
+| 1  2 |
+Decryption Key (K^-1)
+Plaintext
 
-Decryption (Inverse): {{2, 22}, {26, 3}}
-
-Modulus: 27 (Alphabet Size).
-
+| 2  22 |
+| 26  3 |
 How It Works
 The system treats text as vectors and multiplies them by the key matrix. For decryption, it utilizes the modular multiplicative inverse of the determinant to ensure the original message is recovered accurately.
 
