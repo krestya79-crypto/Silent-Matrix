@@ -1,11 +1,11 @@
-### SilentMatrIX
+### SilentMatrIX ##
 
-###########################################
+
 ##                                       ##
 ##   H I L L  C I P H E R  S Y S T E M   ##
 ##          [ Matrix 2x2 Mode ]          ##
 ##                                       ##
-###########################################
+
 **Overview**
 SilentMatrix is a C++ cryptographic tool implementing the Hill Cipher algorithm using 2x2 matrix transformations. It is designed for users interested in linear algebra-based encryption and cryptographic analysis. The system extends the standard English alphabet to include spaces, providing a seamless encryption experience for full sentences.
 
